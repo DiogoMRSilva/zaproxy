@@ -29,6 +29,9 @@ public class HttpBreakpointManagementDaemonImpl implements BreakpointManagementI
 
     private boolean breakRequest;
     private boolean breakResponse;
+    private boolean breakOnJavaScript;
+    private boolean breakOnCSSAndFonts;
+    private boolean breakOnMultimedia;
     private boolean request;
     private HttpMessage msg;
     private boolean step;
@@ -48,6 +51,21 @@ public class HttpBreakpointManagementDaemonImpl implements BreakpointManagementI
     @Override
     public boolean isBreakAll() {
         return (breakRequest && breakResponse);
+    }
+
+    @Override
+    public boolean isBreakOnJavaScript() {
+        return breakOnJavaScript;
+    }
+
+    @Override
+    public boolean isBreakOnCSSAndFonts() {
+        return breakOnCSSAndFonts;
+    }
+
+    @Override
+    public boolean isBreakOnMultimedia() {
+        return breakOnMultimedia;
     }
 
     @Override
@@ -166,6 +184,9 @@ public class HttpBreakpointManagementDaemonImpl implements BreakpointManagementI
     public void sessionModeChanged(Mode mode) {
         breakRequest = false;
         breakResponse = false;
+        breakOnJavaScript = true;
+        breakOnCSSAndFonts = true;
+        breakOnMultimedia = true;
         msg = null;
         step = false;
         stepping = false;

@@ -30,6 +30,12 @@ public interface BreakpointManagementInterface {
 
     boolean isBreakAll();
 
+    boolean isBreakOnJavaScript();
+
+    boolean isBreakOnCSSAndFonts();
+    
+    boolean isBreakOnMultimedia();
+
     void breakpointHit();
 
     boolean isHoldMessage(Message aMessage);

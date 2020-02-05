@@ -56,6 +56,10 @@ public class BreakPanelToolbarFactory {
     private BreakResponsesButtonAction breakResponsesButtonAction;
     private BreakAllButtonAction breakAllButtonAction;
 
+    private SetBreakOnJavaScriptAction setBreakOnJavaScriptAction;
+    private SetBreakOnCSSAndFontsAction setBreakOnCSSAndFontsAction;
+    private SetBreakOnMultimediaAction setBreakOnMultimediaAction;
+
     private boolean cont = false;
     private boolean step = false;
     private boolean stepping = false;
@@ -63,6 +67,9 @@ public class BreakPanelToolbarFactory {
     private boolean isBreakRequest = false;
     private boolean isBreakResponse = false;
     private boolean isBreakAll = false;
+    private boolean isBreakOnJavaScript = true;
+    private boolean isBreakOnCSSAndFonts = true;
+    private boolean isBreakOnMultimedia = true;
 
     private BreakPanel breakPanel = null;
 
@@ -94,6 +101,10 @@ public class BreakPanelToolbarFactory {
         breakRequestsButtonAction = new BreakRequestsButtonAction();
         breakResponsesButtonAction = new BreakResponsesButtonAction();
         breakAllButtonAction = new BreakAllButtonAction();
+
+        setBreakOnJavaScriptAction = new SetBreakOnJavaScriptAction();
+        setBreakOnCSSAndFontsAction = new SetBreakOnCSSAndFontsAction();
+        setBreakOnMultimediaAction = new SetBreakOnMultimediaAction();
 
         this.breakpointsParams = breakpointsParams;
         this.breakPanel = breakPanel;
@@ -150,6 +161,19 @@ public class BreakPanelToolbarFactory {
     public boolean isBreakAll() {
         return isBreakAll;
     }
+
+    public boolean isBreakOnJavaScript() {
+        return isBreakOnJavaScript;
+    }
+
+    public boolean isBreakOnCSSAndFonts() {
+        return isBreakOnCSSAndFonts;
+    }
+
+    public boolean isBreakOnMultimedia() {
+        return isBreakOnMultimedia;
+    }
+
 
     public JButton getBtnStep() {
         return new JButton(stepButtonAction);
@@ -232,6 +256,48 @@ public class BreakPanelToolbarFactory {
         return btnBreakAll;
     }
 
+    public JToggleButton getBtnBreakOnJavaScript() {
+        ZapToggleButton btnBreakOnJavaScript;
+
+        btnBreakOnJavaScript = new ZapToggleButton(setBreakOnJavaScriptAction);
+        btnBreakOnJavaScript.setSelectedIcon(
+                new ImageIcon(
+                        BreakPanelToolbarFactory.class.getResource(
+                                "/resource/icon/breakTypes/javascriptNotBreaking.png")));
+        btnBreakOnJavaScript.setSelectedToolTipText(
+                Constant.messages.getString("brk.toolbar.button.brkjavascript.set"));
+
+        return btnBreakOnJavaScript;
+    }
+
+    public JToggleButton getBtnBreakOnCSSAndFonts() {
+        ZapToggleButton btnBreakOnCSSAndFonts;
+
+        btnBreakOnCSSAndFonts = new ZapToggleButton(setBreakOnCSSAndFontsAction);
+        btnBreakOnCSSAndFonts.setSelectedIcon(
+                new ImageIcon(
+                        BreakPanelToolbarFactory.class.getResource(
+                                "/resource/icon/breakTypes/cssAndFontsNotBreaking.png")));
+        btnBreakOnCSSAndFonts.setSelectedToolTipText(
+                Constant.messages.getString("brk.toolbar.button.brkcssfonts.set"));
+
+        return btnBreakOnCSSAndFonts;
+    }
+
+    public JToggleButton getBtnBreakOnMultimedia() {
+        ZapToggleButton btnBreakOnMultimedia;
+
+        btnBreakOnMultimedia = new ZapToggleButton(setBreakOnMultimediaAction);
+        btnBreakOnMultimedia.setSelectedIcon(
+                new ImageIcon(
+                        BreakPanelToolbarFactory.class.getResource(
+                                "/resource/icon/breakTypes/multimediaNotBreaking.png")));
+        btnBreakOnMultimedia.setSelectedToolTipText(
+                Constant.messages.getString("brk.toolbar.button.brkmultimedia.set"));
+
+        return btnBreakOnMultimedia;
+    }
+
     public JButton getBtnBreakPoint() {
         return new JButton(addBreakpointButtonAction);
     }
@@ -279,6 +345,21 @@ public class BreakPanelToolbarFactory {
         breakAllButtonAction.setSelected(isBreakAll);
     }
 
+    public void setBreakOnJavaScript(boolean brk) {
+        isBreakOnJavaScript = brk;
+        setBreakOnJavaScriptAction.setSelected(!isBreakOnJavaScript);
+    }
+
+    public void setBreakOnCSSAndFonts(boolean brk) {
+        isBreakOnCSSAndFonts = brk;
+        setBreakOnCSSAndFontsAction.setSelected(!isBreakOnCSSAndFonts);
+    }
+
+    public void setBreakOnMultimedia(boolean brk) {
+        isBreakOnMultimedia = brk;
+        setBreakOnMultimediaAction.setSelected(!isBreakOnMultimedia);
+    }
+
     private void toggleBreakRequest() {
         setBreakRequest(!isBreakRequest);
     }
@@ -289,6 +370,17 @@ public class BreakPanelToolbarFactory {
 
     private void toggleBreakAll() {
         setBreakAll(!isBreakAll);
+    }
+    private void toggleBreakOnJavascript() {
+        setBreakOnJavaScript(!isBreakOnJavaScript);
+    }
+
+    private void toggleBreakOnCSSAndFonts() {
+        setBreakOnCSSAndFonts(!isBreakOnCSSAndFonts);
+    }
+
+    private void toggleBreakOnMultimedia() {
+        setBreakOnMultimedia(!isBreakOnMultimedia);
     }
 
     public boolean isHoldMessage() {
@@ -387,6 +479,9 @@ public class BreakPanelToolbarFactory {
         isBreakRequest = false;
         isBreakResponse = false;
         isBreakAll = false;
+        isBreakOnJavaScript = true;
+        isBreakOnCSSAndFonts = true;
+        isBreakOnMultimedia = true;
         countCaughtMessages = 0;
     }
 
@@ -402,6 +497,12 @@ public class BreakPanelToolbarFactory {
         if (isBreakAll()) {
             toggleBreakAll();
         }
+
+        setBreakOnJavaScript(isBreakOnJavaScript);
+
+        setBreakOnCSSAndFonts(isBreakOnCSSAndFonts);
+
+        setBreakOnMultimedia(isBreakOnMultimedia);
 
         setContinue(true);
     }
@@ -469,6 +570,9 @@ public class BreakPanelToolbarFactory {
             setBreakAll(false);
             setBreakRequest(false);
             setBreakResponse(false);
+            setBreakOnJavaScript(isBreakOnJavaScript);
+            setBreakOnCSSAndFonts(isBreakOnCSSAndFonts);
+            setBreakOnMultimedia(isBreakOnMultimedia);
         }
     }
 
@@ -608,6 +712,67 @@ public class BreakPanelToolbarFactory {
             toggleBreakAll();
         }
     }
+
+    private class SetBreakOnJavaScriptAction extends SelectableAbstractAction {
+
+        private static final long serialVersionUID = 1L;
+
+        public SetBreakOnJavaScriptAction() {
+            super(
+                    null,
+                    new ImageIcon(
+                            BreakPanelToolbarFactory.class.getResource(
+                                    "/resource/icon/breakTypes/javascript.png")));
+            putValue(
+                    Action.SHORT_DESCRIPTION, Constant.messages.getString("brk.toolbar.button.brkjavascript.unset"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            toggleBreakOnJavascript();
+        }
+    }
+
+    private class SetBreakOnCSSAndFontsAction extends SelectableAbstractAction {
+
+        private static final long serialVersionUID = 1L;
+
+        public SetBreakOnCSSAndFontsAction() {
+            super(
+                    null,
+                    new ImageIcon(
+                            BreakPanelToolbarFactory.class.getResource(
+                                    "/resource/icon/breakTypes/cssAndFonts.png")));
+            putValue(
+                    Action.SHORT_DESCRIPTION, Constant.messages.getString("brk.toolbar.button.brkcssfonts.unset"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            toggleBreakOnCSSAndFonts();
+        }
+    }
+
+    private class SetBreakOnMultimediaAction extends SelectableAbstractAction {
+
+        private static final long serialVersionUID = 1L;
+
+        public SetBreakOnMultimediaAction() {
+            super(
+                    null,
+                    new ImageIcon(
+                            BreakPanelToolbarFactory.class.getResource(
+                                    "/resource/icon/breakTypes/multimedia.png")));
+            putValue(
+                    Action.SHORT_DESCRIPTION, Constant.messages.getString("brk.toolbar.button.brkmultimedia.unset"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            toggleBreakOnMultimedia();
+        }
+    }
+
 
     /**
      * An {@code AbstractAction} which allows to be selected.

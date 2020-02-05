@@ -64,6 +64,9 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
     private final JToggleButton toolBarReqButton;
     private final JToggleButton toolBarResButton;
     private final JToggleButton toolBarAllButton;
+    private final JToggleButton toolBarBrkOnJavascriptButton;
+    private final JToggleButton toolBarBrkOnCSSAndFontsButton;
+    private final JToggleButton toolBarBrkOnMultimediaButton;
     private final JButton toolBarBtnStep;
     private final JButton toolBarBtnContinue;
     private final JButton toolBarBtnDrop;
@@ -148,6 +151,15 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
         toolBarBtnBreakPoint = breakToolbarFactory.getBtnBreakPoint();
         View.getSingleton().addMainToolbarButton(toolBarBtnBreakPoint);
 
+        toolBarBrkOnJavascriptButton = breakToolbarFactory.getBtnBreakOnJavaScript();
+        View.getSingleton().addMainToolbarButton(toolBarBrkOnJavascriptButton);
+
+        toolBarBrkOnCSSAndFontsButton = breakToolbarFactory.getBtnBreakOnCSSAndFonts();
+        View.getSingleton().addMainToolbarButton(toolBarBrkOnCSSAndFontsButton);
+
+        toolBarBrkOnMultimediaButton = breakToolbarFactory.getBtnBreakOnMultimedia();
+        View.getSingleton().addMainToolbarButton(toolBarBrkOnMultimediaButton);
+
         mainBreakButtons = new BreakButtonsUI("mainBreakButtons", breakToolbarFactory);
         this.add(mainBreakButtons.getComponent(), BorderLayout.NORTH);
 
@@ -222,6 +234,21 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
     @Override
     public boolean isBreakAll() {
         return breakToolbarFactory.isBreakAll();
+    }
+
+    @Override
+    public boolean isBreakOnJavaScript() {
+        return breakToolbarFactory.isBreakOnJavaScript();
+    }
+
+    @Override
+    public boolean isBreakOnCSSAndFonts() {
+        return breakToolbarFactory.isBreakOnCSSAndFonts();
+    }
+
+    @Override
+    public boolean isBreakOnMultimedia() {
+        return breakToolbarFactory.isBreakOnMultimedia();
     }
 
     @Override
@@ -521,11 +548,18 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
         private final JToggleButton requestButton;
         private final JToggleButton responseButton;
         private final JToggleButton allButton;
+        private final JToggleButton brkOnJsButton;
+        private final JToggleButton brkOnCSSAndFontsButton;
+        private final JToggleButton brkOnMultimediaButton;
 
         public BreakButtonsUI(String name, BreakPanelToolbarFactory breakToolbarFactory) {
             requestButton = breakToolbarFactory.getBtnBreakRequest();
             responseButton = breakToolbarFactory.getBtnBreakResponse();
             allButton = breakToolbarFactory.getBtnBreakAll();
+            brkOnJsButton = breakToolbarFactory.getBtnBreakOnJavaScript();
+            brkOnCSSAndFontsButton = breakToolbarFactory.getBtnBreakOnCSSAndFonts();
+            brkOnMultimediaButton = breakToolbarFactory.getBtnBreakOnMultimedia();
+
 
             toolBar = new JToolBar();
             toolBar.setFloatable(false);
@@ -541,6 +575,9 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
             toolBar.add(breakToolbarFactory.getBtnContinue());
             toolBar.add(breakToolbarFactory.getBtnDrop());
             toolBar.add(breakToolbarFactory.getBtnBreakPoint());
+            toolBar.add(brkOnJsButton);
+            toolBar.add(brkOnCSSAndFontsButton);
+            toolBar.add(brkOnMultimediaButton);
         }
 
         /**

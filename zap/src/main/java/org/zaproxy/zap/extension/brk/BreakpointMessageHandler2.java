@@ -22,8 +22,10 @@ package org.zaproxy.zap.extension.brk;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.httpclient.URIException;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.control.Control.Mode;
+import org.parosproxy.paros.network.HttpMessage;
 import org.zaproxy.zap.extension.httppanel.Message;
 
 public class BreakpointMessageHandler2 {
@@ -31,6 +33,8 @@ public class BreakpointMessageHandler2 {
     private static final Logger LOGGER = Logger.getLogger(BreakpointMessageHandler2.class);
 
     protected static final Object SEMAPHORE = new Object();
+
+    private static final String HTTP_TYPE = "HTTP";
 
     protected final BreakpointManagementInterface breakMgmt;
 
@@ -144,6 +148,35 @@ public class BreakpointMessageHandler2 {
         if (aMessage.isForceIntercept()) {
             // The browser told us to do it Your Honour
             return true;
+        }
+
+        if (aMessage.getType().equals(HTTP_TYPE)) {
+            String path = null;
+            try {
+                path = ((HttpMessage) aMessage).getRequestHeader().getURI().getPath();
+                // JAVASCRIPT
+                if (!breakMgmt.isBreakOnJavaScript() && path.endsWith(".js")) {
+                    return false;
+                }
+                // CSS AND FONTS
+                if (!breakMgmt.isBreakOnCSSAndFonts() &&
+                        (path.endsWith(".css") || path.endsWith(".woff") || path.endsWith(".woff2"))) {
+                    return false;
+                }
+                // MULTIMEDIA
+                if (!breakMgmt.isBreakOnMultimedia() && (
+                        path.endsWith(".png")
+                        || path.endsWith(".gif")
+                        || path.endsWith(".jpg")
+                        || path.endsWith(".jpeg")
+                        || path.endsWith(".svg")
+                        || path.endsWith(".mp4")
+                        || path.endsWith(".mp3"))) {
+                    return false;
+                }
+            } catch (URIException e) {
+                e.printStackTrace();
+            }
         }
 
         if (onlyIfInScope && !aMessage.isInScope()) {
