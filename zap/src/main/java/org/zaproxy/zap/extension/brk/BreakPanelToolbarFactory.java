@@ -75,6 +75,7 @@ public class BreakPanelToolbarFactory {
 
     private BreakpointsParam breakpointsParams;
     private int mode = 0;
+    private boolean showButtonsState = false;
 
     /**
      * A counter to keep track of how many messages are currently caught, to disable the break
@@ -547,6 +548,15 @@ public class BreakPanelToolbarFactory {
         this.mode = mode;
     }
 
+    public void setShowIgnoreFilesButtons(boolean showButtons) {
+        this.showButtonsState = showButtons;
+
+        if(showButtons == false) {
+            setBreakOnJavaScript(true);
+            setBreakOnCSSAndFonts(true);
+            setBreakOnMultimedia(true);
+        }
+    }
     private class ContinueButtonAction extends AbstractAction {
 
         private static final long serialVersionUID = 1L;

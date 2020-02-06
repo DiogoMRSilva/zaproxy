@@ -99,6 +99,8 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
      */
     private int currentButtonMode;
 
+    private boolean showButtonsState = false;
+
     public BreakPanel(ExtensionBreak extension, BreakpointsParam breakpointsParams) {
         super();
         this.extension = extension;
@@ -536,6 +538,24 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
         responseBreakButtons.setButtonMode(mode);
     }
 
+    public void setShowIgnoreFilesButtons(boolean showButtons) {
+        //if (showButtonsState == showButtons) {
+        //    return;
+        //}
+        showButtonsState = showButtons;
+
+        this.breakToolbarFactory.setShowIgnoreFilesButtons(showButtons);
+
+        toolBarBrkOnJavascriptButton.setVisible(showButtons);
+        toolBarBrkOnCSSAndFontsButton.setVisible(showButtons);
+        toolBarBrkOnMultimediaButton.setVisible(showButtons);
+
+        mainBreakButtons.setShowIgnoreFilesButtons(showButtons);
+        requestBreakButtons.setShowIgnoreFilesButtons(showButtons);
+        responseBreakButtons.setShowIgnoreFilesButtons(showButtons);
+
+    }
+
     /**
      * A wrapper of a view component with break related buttons/functionality.
      *
@@ -602,6 +622,12 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
             requestButton.setVisible(!simple);
             responseButton.setVisible(!simple);
             allButton.setVisible(simple);
+        }
+
+        public void setShowIgnoreFilesButtons(boolean showButtons) {
+            brkOnJsButton.setVisible(showButtons);
+            brkOnCSSAndFontsButton.setVisible(showButtons);
+            brkOnMultimediaButton.setVisible(showButtons);
         }
 
         /**

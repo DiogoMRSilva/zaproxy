@@ -50,6 +50,7 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
     private JCheckBox checkBoxConfirmDropMessage = null;
     private JCheckBox checkBoxAlwaysOnTop = null;
     private JCheckBox checkBoxInScopeOnly = null;
+    private JCheckBox checkBoxShowIgnoreFilesButtons = null;
     private JComboBox<String> buttonMode = null;
 
     public BreakpointsOptionsPanel() {
@@ -70,12 +71,16 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
         panel.add(
                 getCheckBoxAlwaysOnTop(),
                 LayoutHelper.getGBC(0, 2, 2, 1.0, new Insets(2, 2, 2, 2)));
+        panel.add(
+                getCheckBoxShowIgnoreFilesButtons(),
+                LayoutHelper.getGBC(0, 3, 2, 1.0, new Insets(2, 2, 2, 2)));
+
 
         JLabel modeLabel =
                 new JLabel(Constant.messages.getString("brk.optionspanel.option.breakmode.label"));
         modeLabel.setLabelFor(getButtonMode());
-        panel.add(modeLabel, LayoutHelper.getGBC(0, 3, 1, 0.5));
-        panel.add(getButtonMode(), LayoutHelper.getGBC(1, 3, 1, 0.5));
+        panel.add(modeLabel, LayoutHelper.getGBC(0, 4, 1, 0.5));
+        panel.add(getButtonMode(), LayoutHelper.getGBC(1, 4, 1, 0.5));
         panel.add(new JLabel(), LayoutHelper.getGBC(0, 10, 1, 0.5D, 1.0D)); // Spacer
 
         add(panel);
@@ -111,6 +116,16 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
         return checkBoxInScopeOnly;
     }
 
+    private JCheckBox getCheckBoxShowIgnoreFilesButtons() {
+        if (checkBoxShowIgnoreFilesButtons == null) {
+            checkBoxShowIgnoreFilesButtons =
+                    new JCheckBox(
+                            Constant.messages.getString(
+                                    "brk.optionspanel.option.ShowIgnoreFilesButtons.label"));
+        }
+        return checkBoxShowIgnoreFilesButtons;
+    }
+
     private JComboBox<String> getButtonMode() {
         if (buttonMode == null) {
             buttonMode = new JComboBox<String>();
@@ -131,6 +146,7 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
         // Note param.alwaysOnTop will be null if the user hasn't specified a preference yet
         getCheckBoxAlwaysOnTop().setSelected(param.getAlwaysOnTop() != Boolean.FALSE);
         getCheckBoxInScopeOnly().setSelected(param.isInScopeOnly());
+        getCheckBoxShowIgnoreFilesButtons().setSelected(param.getIsToShowIgnoreFilesButtons());
         getButtonMode().setSelectedIndex(param.getButtonMode() - 1);
     }
 
@@ -147,6 +163,7 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
             param.setAlwaysOnTop(getCheckBoxAlwaysOnTop().isSelected());
         }
         param.setInScopeOnly(getCheckBoxInScopeOnly().isSelected());
+        param.setShowIgnoreFilesButtons(getCheckBoxShowIgnoreFilesButtons().isSelected());
         param.setButtonMode(this.getButtonMode().getSelectedIndex() + 1);
     }
 
