@@ -159,19 +159,23 @@ public class BreakpointMessageHandler2 {
                     return false;
                 }
                 // CSS AND FONTS
-                if (!breakMgmt.isBreakOnCSSAndFonts() &&
-                        (path.endsWith(".css") || path.endsWith(".woff") || path.endsWith(".woff2"))) {
+                if (!breakMgmt.isBreakOnCSSAndFonts() && (
+                                path.endsWith(".css") ||
+                                path.endsWith(".woff") ||
+                                path.endsWith(".woff2") ||
+                                path.endsWith(".ttf"))) {
                     return false;
                 }
                 // MULTIMEDIA
                 if (!breakMgmt.isBreakOnMultimedia() && (
-                        path.endsWith(".png")
-                        || path.endsWith(".gif")
-                        || path.endsWith(".jpg")
-                        || path.endsWith(".jpeg")
-                        || path.endsWith(".svg")
-                        || path.endsWith(".mp4")
-                        || path.endsWith(".mp3"))) {
+                        path.endsWith(".png") ||
+                        path.endsWith(".gif") ||
+                        path.endsWith(".jpg") ||
+                        path.endsWith(".jpeg") ||
+                        path.endsWith(".svg") ||
+                        path.endsWith(".mp4") ||
+                        path.endsWith(".mp3") ||
+                        path.endsWith(".webm"))) {
                     return false;
                 }
             } catch (URIException e) {
