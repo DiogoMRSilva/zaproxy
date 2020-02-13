@@ -33,7 +33,7 @@ public interface BreakpointManagementInterface {
     boolean isBreakOnJavaScript();
 
     boolean isBreakOnCSSAndFonts();
-    
+
     boolean isBreakOnMultimedia();
 
     void breakpointHit();

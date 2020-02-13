@@ -75,7 +75,6 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
                 getCheckBoxShowIgnoreFilesButtons(),
                 LayoutHelper.getGBC(0, 3, 2, 1.0, new Insets(2, 2, 2, 2)));
 
-
         JLabel modeLabel =
                 new JLabel(Constant.messages.getString("brk.optionspanel.option.breakmode.label"));
         modeLabel.setLabelFor(getButtonMode());

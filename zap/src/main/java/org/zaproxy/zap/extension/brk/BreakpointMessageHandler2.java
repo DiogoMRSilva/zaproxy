@@ -22,10 +22,8 @@ package org.zaproxy.zap.extension.brk;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.commons.httpclient.URIException;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.control.Control.Mode;
-import org.parosproxy.paros.network.HttpMessage;
 import org.zaproxy.zap.extension.httppanel.Message;
 
 public class BreakpointMessageHandler2 {
@@ -39,6 +37,8 @@ public class BreakpointMessageHandler2 {
     protected final BreakpointManagementInterface breakMgmt;
 
     protected List<BreakpointMessageInterface> enabledBreakpoints;
+
+    protected List<BreakpointMessageInterface> enabledIgnoreRules;
 
     private List<String> enabledKeyBreakpoints = new ArrayList<>();
 
@@ -56,6 +56,10 @@ public class BreakpointMessageHandler2 {
 
     public void setEnabledBreakpoints(List<BreakpointMessageInterface> breakpoints) {
         this.enabledBreakpoints = breakpoints;
+    }
+
+    public void setEnabledIgnoreRules(List<BreakpointMessageInterface> IgnoreRules) {
+        this.enabledIgnoreRules = IgnoreRules;
     }
 
     /**
@@ -150,37 +154,8 @@ public class BreakpointMessageHandler2 {
             return true;
         }
 
-        if (aMessage.getType().equals(HTTP_TYPE)) {
-            String path = null;
-            try {
-                path = ((HttpMessage) aMessage).getRequestHeader().getURI().getPath();
-                // JAVASCRIPT
-                if (!breakMgmt.isBreakOnJavaScript() && path.endsWith(".js")) {
-                    return false;
-                }
-                // CSS AND FONTS
-                if (!breakMgmt.isBreakOnCSSAndFonts() && (
-                                path.endsWith(".css") ||
-                                path.endsWith(".woff") ||
-                                path.endsWith(".woff2") ||
-                                path.endsWith(".ttf"))) {
-                    return false;
-                }
-                // MULTIMEDIA
-                if (!breakMgmt.isBreakOnMultimedia() && (
-                        path.endsWith(".png") ||
-                        path.endsWith(".gif") ||
-                        path.endsWith(".jpg") ||
-                        path.endsWith(".jpeg") ||
-                        path.endsWith(".svg") ||
-                        path.endsWith(".mp4") ||
-                        path.endsWith(".mp3") ||
-                        path.endsWith(".webm"))) {
-                    return false;
-                }
-            } catch (URIException e) {
-                e.printStackTrace();
-            }
+        if (isSkipOnIgnoreRules(aMessage, isRequest, onlyIfInScope)) {
+            return false;
         }
 
         if (onlyIfInScope && !aMessage.isInScope()) {
@@ -228,6 +203,29 @@ public class BreakpointMessageHandler2 {
                 BreakpointMessageInterface breakpoint = it.next();
 
                 if (breakpoint.match(aMessage, isRequest, onlyIfInScope)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    protected boolean isSkipOnIgnoreRules(
+            Message aMessage, boolean isRequest, boolean onlyIfInScope) {
+        if (enabledIgnoreRules.isEmpty()) {
+            // No Ignoring rules
+            return false;
+        }
+
+        // match against the ingoring rule
+        synchronized (enabledIgnoreRules) {
+            Iterator<BreakpointMessageInterface> it = enabledIgnoreRules.iterator();
+
+            while (it.hasNext()) {
+                BreakpointMessageInterface ignoreRule = it.next();
+
+                if (ignoreRule.match(aMessage, isRequest, onlyIfInScope)) {
                     return true;
                 }
             }
