@@ -23,6 +23,8 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.EventQueue;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -52,6 +54,12 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
 
     private static final String REQUEST_PANEL = "request";
     private static final String RESPONSE_PANEL = "response";
+
+    private static final String[] JAVASCRTIPT_EXTENSIONS_LIST = {".js"};
+    private static final String[] CSS_FONTS_EXTENSIONS_LIST = {".css", ".woff", ".woff2", ".ttf"};
+    private static final String[] MULTIMEDIA_EXTENSIONS_LIST = {
+        ".png", ".gif", ".jpg", ".jpeg", ".svg", ".mp4", ".mp3", ".webm"
+    };
 
     private HttpPanelRequest requestPanel;
     private HttpPanelResponse responsePanel;
@@ -100,6 +108,8 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
     private int currentButtonMode;
 
     private boolean showButtonsState = false;
+
+    private List<BreakpointMessageInterface> ignoreRulesEnable;
 
     public BreakPanel(ExtensionBreak extension, BreakpointsParam breakpointsParams) {
         super();
@@ -174,6 +184,17 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
                 responseBreakButtons.getComponent(), HttpPanel.OptionsLocation.AFTER_COMPONENTS);
 
         currentButtonsLocation = -1;
+
+        this.ignoreRulesEnable = ignoreRulesEnable = new ArrayList<>(0);
+        ignoreRulesEnable.add(
+                new ToggleButtonIgnoreMessage(
+                        toolBarBrkOnJavascriptButton, JAVASCRTIPT_EXTENSIONS_LIST));
+        ignoreRulesEnable.add(
+                new ToggleButtonIgnoreMessage(
+                        toolBarBrkOnCSSAndFontsButton, CSS_FONTS_EXTENSIONS_LIST));
+        ignoreRulesEnable.add(
+                new ToggleButtonIgnoreMessage(
+                        toolBarBrkOnMultimediaButton, MULTIMEDIA_EXTENSIONS_LIST));
     }
 
     /**
@@ -539,9 +560,9 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
     }
 
     public void setShowIgnoreFilesButtons(boolean showButtons) {
-        //if (showButtonsState == showButtons) {
+        // if (showButtonsState == showButtons) {
         //    return;
-        //}
+        // }
         showButtonsState = showButtons;
 
         this.breakToolbarFactory.setShowIgnoreFilesButtons(showButtons);
@@ -553,7 +574,10 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
         mainBreakButtons.setShowIgnoreFilesButtons(showButtons);
         requestBreakButtons.setShowIgnoreFilesButtons(showButtons);
         responseBreakButtons.setShowIgnoreFilesButtons(showButtons);
+    }
 
+    public List<BreakpointMessageInterface> getIgnoreRulesEnableList() {
+        return ignoreRulesEnable;
     }
 
     /**
@@ -579,7 +603,6 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
             brkOnJsButton = breakToolbarFactory.getBtnBreakOnJavaScript();
             brkOnCSSAndFontsButton = breakToolbarFactory.getBtnBreakOnCSSAndFonts();
             brkOnMultimediaButton = breakToolbarFactory.getBtnBreakOnMultimedia();
-
 
             toolBar = new JToolBar();
             toolBar.setFloatable(false);

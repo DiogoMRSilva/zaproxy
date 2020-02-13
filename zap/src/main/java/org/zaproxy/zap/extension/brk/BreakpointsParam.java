@@ -44,7 +44,8 @@ public class BreakpointsParam extends AbstractParam {
     private static final String PARAM_UI_BUTTON_MODE = PARAM_BASE_KEY + ".buttonMode";
     private static final String PARAM_BRK_ALWAYS_ON_TOP = PARAM_BASE_KEY + ".alwaysOnTop";
     private static final String PARAM_BRK_IN_SCOPE_ONLY = PARAM_BASE_KEY + ".inScopeOnly";
-    private static final String SHOW_IGNORE_FILES_BUTTONS = PARAM_BASE_KEY + ".ShowIgnoreFilesButtons";
+    private static final String SHOW_IGNORE_FILES_BUTTONS =
+            PARAM_BASE_KEY + ".ShowIgnoreFilesButtons";
 
     /** Default is {@code false}. */
     private boolean confirmDropMessage;
@@ -53,6 +54,7 @@ public class BreakpointsParam extends AbstractParam {
     private Boolean alwaysOnTop = null;
     private boolean inScopeOnly = false;
     private boolean showIgnoreFilesButtons = false;
+
     public BreakpointsParam() {
         super();
 

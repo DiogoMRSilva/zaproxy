@@ -175,7 +175,6 @@ public class BreakPanelToolbarFactory {
         return isBreakOnMultimedia;
     }
 
-
     public JButton getBtnStep() {
         return new JButton(stepButtonAction);
     }
@@ -372,6 +371,7 @@ public class BreakPanelToolbarFactory {
     private void toggleBreakAll() {
         setBreakAll(!isBreakAll);
     }
+
     private void toggleBreakOnJavascript() {
         setBreakOnJavaScript(!isBreakOnJavaScript);
     }
@@ -551,12 +551,13 @@ public class BreakPanelToolbarFactory {
     public void setShowIgnoreFilesButtons(boolean showButtons) {
         this.showButtonsState = showButtons;
 
-        if(showButtons == false) {
+        if (showButtons == false) {
             setBreakOnJavaScript(true);
             setBreakOnCSSAndFonts(true);
             setBreakOnMultimedia(true);
         }
     }
+
     private class ContinueButtonAction extends AbstractAction {
 
         private static final long serialVersionUID = 1L;
@@ -734,7 +735,8 @@ public class BreakPanelToolbarFactory {
                             BreakPanelToolbarFactory.class.getResource(
                                     "/resource/icon/breakTypes/javascript.png")));
             putValue(
-                    Action.SHORT_DESCRIPTION, Constant.messages.getString("brk.toolbar.button.brkjavascript.unset"));
+                    Action.SHORT_DESCRIPTION,
+                    Constant.messages.getString("brk.toolbar.button.brkjavascript.unset"));
         }
 
         @Override
@@ -754,7 +756,8 @@ public class BreakPanelToolbarFactory {
                             BreakPanelToolbarFactory.class.getResource(
                                     "/resource/icon/breakTypes/cssAndFonts.png")));
             putValue(
-                    Action.SHORT_DESCRIPTION, Constant.messages.getString("brk.toolbar.button.brkcssfonts.unset"));
+                    Action.SHORT_DESCRIPTION,
+                    Constant.messages.getString("brk.toolbar.button.brkcssfonts.unset"));
         }
 
         @Override
@@ -774,7 +777,8 @@ public class BreakPanelToolbarFactory {
                             BreakPanelToolbarFactory.class.getResource(
                                     "/resource/icon/breakTypes/multimedia.png")));
             putValue(
-                    Action.SHORT_DESCRIPTION, Constant.messages.getString("brk.toolbar.button.brkmultimedia.unset"));
+                    Action.SHORT_DESCRIPTION,
+                    Constant.messages.getString("brk.toolbar.button.brkmultimedia.unset"));
         }
 
         @Override
@@ -782,7 +786,6 @@ public class BreakPanelToolbarFactory {
             toggleBreakOnMultimedia();
         }
     }
-
 
     /**
      * An {@code AbstractAction} which allows to be selected.
