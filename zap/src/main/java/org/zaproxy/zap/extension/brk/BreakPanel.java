@@ -41,6 +41,7 @@ import org.parosproxy.paros.extension.option.OptionsParamView;
 import org.parosproxy.paros.model.Model;
 import org.parosproxy.paros.network.HttpMessage;
 import org.parosproxy.paros.view.View;
+import org.zaproxy.zap.extension.brk.impl.http.HttpBreakpointMessage;
 import org.zaproxy.zap.extension.httppanel.HttpPanel;
 import org.zaproxy.zap.extension.httppanel.HttpPanelRequest;
 import org.zaproxy.zap.extension.httppanel.HttpPanelResponse;
@@ -54,12 +55,6 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
 
     private static final String REQUEST_PANEL = "request";
     private static final String RESPONSE_PANEL = "response";
-
-    private static final String[] JAVASCRTIPT_EXTENSIONS_LIST = {".js"};
-    private static final String[] CSS_FONTS_EXTENSIONS_LIST = {".css", ".woff", ".woff2", ".ttf"};
-    private static final String[] MULTIMEDIA_EXTENSIONS_LIST = {
-        ".png", ".gif", ".jpg", ".jpeg", ".svg", ".mp4", ".mp3", ".webm"
-    };
 
     private HttpPanelRequest requestPanel;
     private HttpPanelResponse responsePanel;
@@ -108,8 +103,6 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
     private int currentButtonMode;
 
     private boolean showButtonsState = false;
-
-    private List<BreakpointMessageInterface> ignoreRulesEnable;
 
     public BreakPanel(ExtensionBreak extension, BreakpointsParam breakpointsParams) {
         super();
@@ -184,17 +177,6 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
                 responseBreakButtons.getComponent(), HttpPanel.OptionsLocation.AFTER_COMPONENTS);
 
         currentButtonsLocation = -1;
-
-        this.ignoreRulesEnable = ignoreRulesEnable = new ArrayList<>(0);
-        ignoreRulesEnable.add(
-                new ToggleButtonIgnoreMessage(
-                        toolBarBrkOnJavascriptButton, JAVASCRTIPT_EXTENSIONS_LIST));
-        ignoreRulesEnable.add(
-                new ToggleButtonIgnoreMessage(
-                        toolBarBrkOnCSSAndFontsButton, CSS_FONTS_EXTENSIONS_LIST));
-        ignoreRulesEnable.add(
-                new ToggleButtonIgnoreMessage(
-                        toolBarBrkOnMultimediaButton, MULTIMEDIA_EXTENSIONS_LIST));
     }
 
     /**
@@ -577,7 +559,7 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
     }
 
     public List<BreakpointMessageInterface> getIgnoreRulesEnableList() {
-        return ignoreRulesEnable;
+        return breakToolbarFactory.getIgnoreRulesEnableList();
     }
 
     /**
