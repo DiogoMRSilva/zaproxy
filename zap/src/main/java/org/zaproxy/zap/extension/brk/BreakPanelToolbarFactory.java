@@ -20,6 +20,8 @@
 package org.zaproxy.zap.extension.brk;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -32,6 +34,7 @@ import org.parosproxy.paros.Constant;
 import org.parosproxy.paros.control.Control;
 import org.parosproxy.paros.view.TabbedPanel;
 import org.parosproxy.paros.view.View;
+import org.zaproxy.zap.extension.brk.impl.http.HttpBreakpointMessage;
 import org.zaproxy.zap.view.TabbedPanel2;
 import org.zaproxy.zap.view.ZapToggleButton;
 
@@ -77,6 +80,12 @@ public class BreakPanelToolbarFactory {
     private int mode = 0;
     private boolean showButtonsState = false;
 
+    private List<BreakpointMessageInterface> ignoreRulesEnable;
+    BreakpointMessageInterface ignoreJavascriptBreakpointMessage;
+    BreakpointMessageInterface ignoreCSSAndFontsBreakpointMessage;
+    BreakpointMessageInterface ignoreMultimediaBreakpointMessage;
+
+
     /**
      * A counter to keep track of how many messages are currently caught, to disable the break
      * buttons when no message is left.
@@ -109,6 +118,40 @@ public class BreakPanelToolbarFactory {
 
         this.breakpointsParams = breakpointsParams;
         this.breakPanel = breakPanel;
+
+        this.ignoreRulesEnable = new ArrayList<>(0);
+
+        ignoreJavascriptBreakpointMessage =
+                new HttpBreakpointMessage(
+                        ".*\\.js.*",
+                        HttpBreakpointMessage.Location.url,
+                        HttpBreakpointMessage.Match.regex,
+                        false,
+                        true);
+        ignoreRulesEnable.add(ignoreJavascriptBreakpointMessage);
+
+        ignoreCSSAndFontsBreakpointMessage =
+                new HttpBreakpointMessage(
+                        ".*\\.(?:css|woff|woff2|ttf).*",
+                        HttpBreakpointMessage.Location.url,
+                        HttpBreakpointMessage.Match.regex,
+                        false,
+                        true);
+        ignoreRulesEnable.add(ignoreCSSAndFontsBreakpointMessage);
+
+        ignoreMultimediaBreakpointMessage =
+                new HttpBreakpointMessage(
+                        ".*\\.(?:png|gif|jpg|jpeg|svg|mp4|mp3|webm|ico).*",
+                        HttpBreakpointMessage.Location.url,
+                        HttpBreakpointMessage.Match.regex,
+                        false,
+                        true);
+        ignoreRulesEnable.add(ignoreMultimediaBreakpointMessage);
+
+    }
+
+    public List<BreakpointMessageInterface> getIgnoreRulesEnableList() {
+        return ignoreRulesEnable;
     }
 
     private void setActiveIcon(boolean active) {
@@ -348,16 +391,19 @@ public class BreakPanelToolbarFactory {
     public void setBreakOnJavaScript(boolean brk) {
         isBreakOnJavaScript = brk;
         setBreakOnJavaScriptAction.setSelected(!isBreakOnJavaScript);
+        ignoreJavascriptBreakpointMessage.setEnabled(!isBreakOnJavaScript);
     }
 
     public void setBreakOnCSSAndFonts(boolean brk) {
         isBreakOnCSSAndFonts = brk;
         setBreakOnCSSAndFontsAction.setSelected(!isBreakOnCSSAndFonts);
+        ignoreCSSAndFontsBreakpointMessage.setEnabled(!isBreakOnCSSAndFonts);
     }
 
     public void setBreakOnMultimedia(boolean brk) {
         isBreakOnMultimedia = brk;
         setBreakOnMultimediaAction.setSelected(!isBreakOnMultimedia);
+        ignoreMultimediaBreakpointMessage.setEnabled(!isBreakOnMultimedia);
     }
 
     private void toggleBreakRequest() {
