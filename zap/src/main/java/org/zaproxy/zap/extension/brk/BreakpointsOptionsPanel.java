@@ -30,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 import org.parosproxy.paros.Constant;
 import org.parosproxy.paros.model.OptionsParam;
 import org.parosproxy.paros.view.AbstractParamPanel;
+import org.zaproxy.zap.utils.ZapTextField;
 import org.zaproxy.zap.view.LayoutHelper;
 
 /**
@@ -52,6 +53,9 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
     private JCheckBox checkBoxInScopeOnly = null;
     private JCheckBox checkBoxShowIgnoreFilesButtons = null;
     private JComboBox<String> buttonMode = null;
+    private ZapTextField javascriptUrlRegexField = null;
+    private ZapTextField cssAndFontsUrlRegexField = null;
+    private ZapTextField multimediaUrlRegexField = null;
 
     public BreakpointsOptionsPanel() {
         super();
@@ -75,11 +79,38 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
                 getCheckBoxShowIgnoreFilesButtons(),
                 LayoutHelper.getGBC(0, 3, 2, 1.0, new Insets(2, 2, 2, 2)));
 
+        JLabel javascriptUrlRegexLabel =
+                new JLabel(
+                        Constant.messages.getString(
+                                "brk.optionspanel.option.javascriptUrlRegex.label"));
+        javascriptUrlRegexLabel.setLabelFor(getJavascriptUrlRegexField());
+
+        panel.add(javascriptUrlRegexLabel, LayoutHelper.getGBC(0, 4, 1, 2.0));
+        panel.add(getJavascriptUrlRegexField(), LayoutHelper.getGBC(1, 4, 1, 8.0));
+
+        JLabel cssAndFontsUrlRegexLabel =
+                new JLabel(
+                        Constant.messages.getString(
+                                "brk.optionspanel.option.cssAndFontsUrlRegex.label"));
+        cssAndFontsUrlRegexLabel.setLabelFor(getCssAndFontsUrlRegexField());
+
+        panel.add(cssAndFontsUrlRegexLabel, LayoutHelper.getGBC(0, 5, 1, 2.0));
+        panel.add(getCssAndFontsUrlRegexField(), LayoutHelper.getGBC(1, 5, 1, 8.0));
+
+        JLabel multimediaUrlRegexLabel =
+                new JLabel(
+                        Constant.messages.getString(
+                                "brk.optionspanel.option.multimediaUrlRegex.label"));
+        multimediaUrlRegexLabel.setLabelFor(getMultimediaUrlRegexField());
+
+        panel.add(multimediaUrlRegexLabel, LayoutHelper.getGBC(0, 6, 1, 2.0));
+        panel.add(getMultimediaUrlRegexField(), LayoutHelper.getGBC(1, 6, 1, 8.0));
+
         JLabel modeLabel =
                 new JLabel(Constant.messages.getString("brk.optionspanel.option.breakmode.label"));
         modeLabel.setLabelFor(getButtonMode());
-        panel.add(modeLabel, LayoutHelper.getGBC(0, 4, 1, 0.5));
-        panel.add(getButtonMode(), LayoutHelper.getGBC(1, 4, 1, 0.5));
+        panel.add(modeLabel, LayoutHelper.getGBC(0, 7, 1, 0.5));
+        panel.add(getButtonMode(), LayoutHelper.getGBC(1, 7, 1, 0.5));
         panel.add(new JLabel(), LayoutHelper.getGBC(0, 10, 1, 0.5D, 1.0D)); // Spacer
 
         add(panel);
@@ -125,6 +156,27 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
         return checkBoxShowIgnoreFilesButtons;
     }
 
+    private ZapTextField getJavascriptUrlRegexField() {
+        if (javascriptUrlRegexField == null) {
+            javascriptUrlRegexField = new ZapTextField();
+        }
+        return javascriptUrlRegexField;
+    }
+
+    private ZapTextField getCssAndFontsUrlRegexField() {
+        if (cssAndFontsUrlRegexField == null) {
+            cssAndFontsUrlRegexField = new ZapTextField();
+        }
+        return cssAndFontsUrlRegexField;
+    }
+
+    private ZapTextField getMultimediaUrlRegexField() {
+        if (multimediaUrlRegexField == null) {
+            multimediaUrlRegexField = new ZapTextField();
+        }
+        return multimediaUrlRegexField;
+    }
+
     private JComboBox<String> getButtonMode() {
         if (buttonMode == null) {
             buttonMode = new JComboBox<String>();
@@ -147,6 +199,9 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
         getCheckBoxInScopeOnly().setSelected(param.isInScopeOnly());
         getCheckBoxShowIgnoreFilesButtons().setSelected(param.getIsToShowIgnoreFilesButtons());
         getButtonMode().setSelectedIndex(param.getButtonMode() - 1);
+        getJavascriptUrlRegexField().setText(param.getJavascriptUrlRegex());
+        getCssAndFontsUrlRegexField().setText(param.getCssAndFontsUrlRegex());
+        getMultimediaUrlRegexField().setText(param.getMultimediaUrlRegex());
     }
 
     @Override
@@ -164,6 +219,9 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
         param.setInScopeOnly(getCheckBoxInScopeOnly().isSelected());
         param.setShowIgnoreFilesButtons(getCheckBoxShowIgnoreFilesButtons().isSelected());
         param.setButtonMode(this.getButtonMode().getSelectedIndex() + 1);
+        param.setJavascriptUrlRegex(getJavascriptUrlRegexField().getText());
+        param.setCssAndFontsUrlRegex(getCssAndFontsUrlRegexField().getText());
+        param.setMultimediaUrlRegex(getMultimediaUrlRegexField().getText());
     }
 
     @Override

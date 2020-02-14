@@ -46,6 +46,14 @@ public class BreakpointsParam extends AbstractParam {
     private static final String PARAM_BRK_IN_SCOPE_ONLY = PARAM_BASE_KEY + ".inScopeOnly";
     private static final String SHOW_IGNORE_FILES_BUTTONS =
             PARAM_BASE_KEY + ".ShowIgnoreFilesButtons";
+    private static final String JAVASCRIPT_URL_REGEX = PARAM_BASE_KEY + ".jsUrlRegex";
+    private static final String CSS_AND_FONTS_URL_REGEX = PARAM_BASE_KEY + ".cssAndFontsUrlRegex";
+    private static final String MULTIMIDIA_URL_REGEX = PARAM_BASE_KEY + ".multimediaUrlRegex";
+
+    private static final String JAVASCRIPT_URL_REGEX_DEFAULT = ".*\\.js.*";
+    private static final String CSS_AND_FONTS_URL_REGEX_DEFAULT = ".*\\.(?:css|woff|woff2|ttf).*";
+    private static final String MULTIMIDIA_URL_REGEX_DEFAULT =
+            ".*\\.(?:png|gif|jpg|jpeg|svg|mp4|mp3|webm|ico).*";
 
     /** Default is {@code false}. */
     private boolean confirmDropMessage;
@@ -54,6 +62,9 @@ public class BreakpointsParam extends AbstractParam {
     private Boolean alwaysOnTop = null;
     private boolean inScopeOnly = false;
     private boolean showIgnoreFilesButtons = false;
+    private String javascriptUrlRegex = JAVASCRIPT_URL_REGEX_DEFAULT;
+    private String cssAndFontsUrlRegex = CSS_AND_FONTS_URL_REGEX_DEFAULT;
+    private String multimediaUrlRegex = MULTIMIDIA_URL_REGEX_DEFAULT;
 
     public BreakpointsParam() {
         super();
@@ -77,6 +88,9 @@ public class BreakpointsParam extends AbstractParam {
         alwaysOnTop = getConfig().getBoolean(PARAM_BRK_ALWAYS_ON_TOP, null);
         inScopeOnly = getBoolean(PARAM_BRK_IN_SCOPE_ONLY, false);
         showIgnoreFilesButtons = getBoolean(SHOW_IGNORE_FILES_BUTTONS, false);
+        javascriptUrlRegex = getString(JAVASCRIPT_URL_REGEX, JAVASCRIPT_URL_REGEX_DEFAULT);
+        cssAndFontsUrlRegex = getString(CSS_AND_FONTS_URL_REGEX, CSS_AND_FONTS_URL_REGEX_DEFAULT);
+        multimediaUrlRegex = getString(MULTIMIDIA_URL_REGEX_DEFAULT, MULTIMIDIA_URL_REGEX_DEFAULT);
     }
 
     /**
@@ -137,5 +151,32 @@ public class BreakpointsParam extends AbstractParam {
     public void setShowIgnoreFilesButtons(boolean showIgnoreFilesButtons) {
         this.showIgnoreFilesButtons = showIgnoreFilesButtons;
         getConfig().setProperty(SHOW_IGNORE_FILES_BUTTONS, showIgnoreFilesButtons);
+    }
+
+    public String getJavascriptUrlRegex() {
+        return javascriptUrlRegex;
+    }
+
+    public void setJavascriptUrlRegex(String javascriptUrlRegex) {
+        this.javascriptUrlRegex = javascriptUrlRegex;
+        getConfig().setProperty(JAVASCRIPT_URL_REGEX, javascriptUrlRegex);
+    }
+
+    public String getCssAndFontsUrlRegex() {
+        return cssAndFontsUrlRegex;
+    }
+
+    public void setCssAndFontsUrlRegex(String cssAndFontsUrlRegex) {
+        this.cssAndFontsUrlRegex = cssAndFontsUrlRegex;
+        getConfig().setProperty(CSS_AND_FONTS_URL_REGEX, cssAndFontsUrlRegex);
+    }
+
+    public String getMultimediaUrlRegex() {
+        return multimediaUrlRegex;
+    }
+
+    public void setMultimediaUrlRegex(String multimediaUrlRegex) {
+        this.multimediaUrlRegex = multimediaUrlRegex;
+        getConfig().setProperty(MULTIMIDIA_URL_REGEX, multimediaUrlRegex);
     }
 }
