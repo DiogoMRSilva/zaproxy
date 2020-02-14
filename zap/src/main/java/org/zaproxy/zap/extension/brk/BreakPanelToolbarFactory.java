@@ -81,9 +81,9 @@ public class BreakPanelToolbarFactory {
     private boolean showButtonsState = false;
 
     private List<BreakpointMessageInterface> ignoreRulesEnable;
-    BreakpointMessageInterface ignoreJavascriptBreakpointMessage;
-    BreakpointMessageInterface ignoreCSSAndFontsBreakpointMessage;
-    BreakpointMessageInterface ignoreMultimediaBreakpointMessage;
+    HttpBreakpointMessage ignoreJavascriptBreakpointMessage;
+    HttpBreakpointMessage ignoreCSSAndFontsBreakpointMessage;
+    HttpBreakpointMessage ignoreMultimediaBreakpointMessage;
 
     /**
      * A counter to keep track of how many messages are currently caught, to disable the break
@@ -122,7 +122,7 @@ public class BreakPanelToolbarFactory {
 
         ignoreJavascriptBreakpointMessage =
                 new HttpBreakpointMessage(
-                        ".*\\.js.*",
+                        breakpointsParams.getJavascriptUrlRegex(),
                         HttpBreakpointMessage.Location.url,
                         HttpBreakpointMessage.Match.regex,
                         false,
@@ -131,7 +131,7 @@ public class BreakPanelToolbarFactory {
 
         ignoreCSSAndFontsBreakpointMessage =
                 new HttpBreakpointMessage(
-                        ".*\\.(?:css|woff|woff2|ttf).*",
+                        breakpointsParams.getCssAndFontsUrlRegex(),
                         HttpBreakpointMessage.Location.url,
                         HttpBreakpointMessage.Match.regex,
                         false,
@@ -140,7 +140,7 @@ public class BreakPanelToolbarFactory {
 
         ignoreMultimediaBreakpointMessage =
                 new HttpBreakpointMessage(
-                        ".*\\.(?:png|gif|jpg|jpeg|svg|mp4|mp3|webm|ico).*",
+                        breakpointsParams.getMultimediaUrlRegex(),
                         HttpBreakpointMessage.Location.url,
                         HttpBreakpointMessage.Match.regex,
                         false,
@@ -600,6 +600,13 @@ public class BreakPanelToolbarFactory {
             setBreakOnCSSAndFonts(true);
             setBreakOnMultimedia(true);
         }
+    }
+
+    public void updateIgnoreFileTypesRegexs() {
+        ignoreJavascriptBreakpointMessage.setString(this.breakpointsParams.getJavascriptUrlRegex());
+        ignoreCSSAndFontsBreakpointMessage.setString(
+                this.breakpointsParams.getCssAndFontsUrlRegex());
+        ignoreMultimediaBreakpointMessage.setString(this.breakpointsParams.getMultimediaUrlRegex());
     }
 
     private class ContinueButtonAction extends AbstractAction {

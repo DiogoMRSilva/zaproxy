@@ -679,6 +679,7 @@ public class ExtensionBreak extends ExtensionAdaptor
         breakPanel.setButtonMode(options.getParamSet(BreakpointsParam.class).getButtonMode());
         breakPanel.setShowIgnoreFilesButtons(
                 options.getParamSet(BreakpointsParam.class).getIsToShowIgnoreFilesButtons());
+        breakPanel.updateIgnoreFileTypesRegexs();
     }
 
     @Override

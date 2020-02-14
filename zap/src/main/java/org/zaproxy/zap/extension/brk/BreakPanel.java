@@ -540,9 +540,6 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
     }
 
     public void setShowIgnoreFilesButtons(boolean showButtons) {
-        // if (showButtonsState == showButtons) {
-        //    return;
-        // }
         showButtonsState = showButtons;
 
         this.breakToolbarFactory.setShowIgnoreFilesButtons(showButtons);
@@ -558,6 +555,10 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
 
     public List<BreakpointMessageInterface> getIgnoreRulesEnableList() {
         return breakToolbarFactory.getIgnoreRulesEnableList();
+    }
+
+    public void updateIgnoreFileTypesRegexs() {
+        breakToolbarFactory.updateIgnoreFileTypesRegexs();
     }
 
     /**
