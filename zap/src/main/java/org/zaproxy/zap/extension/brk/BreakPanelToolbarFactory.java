@@ -85,7 +85,6 @@ public class BreakPanelToolbarFactory {
     BreakpointMessageInterface ignoreCSSAndFontsBreakpointMessage;
     BreakpointMessageInterface ignoreMultimediaBreakpointMessage;
 
-
     /**
      * A counter to keep track of how many messages are currently caught, to disable the break
      * buttons when no message is left.
@@ -147,7 +146,6 @@ public class BreakPanelToolbarFactory {
                         false,
                         true);
         ignoreRulesEnable.add(ignoreMultimediaBreakpointMessage);
-
     }
 
     public List<BreakpointMessageInterface> getIgnoreRulesEnableList() {

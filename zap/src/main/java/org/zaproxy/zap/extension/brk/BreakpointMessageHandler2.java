@@ -225,7 +225,8 @@ public class BreakpointMessageHandler2 {
             while (it.hasNext()) {
                 BreakpointMessageInterface ignoreRule = it.next();
 
-                if (ignoreRule.isEnabled() && ignoreRule.match(aMessage, isRequest, onlyIfInScope)) {
+                if (ignoreRule.isEnabled()
+                        && ignoreRule.match(aMessage, isRequest, onlyIfInScope)) {
                     return true;
                 }
             }
