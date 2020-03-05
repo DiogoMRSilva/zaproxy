@@ -53,7 +53,7 @@ public class BreakpointsParam extends AbstractParam {
     private static final String JAVASCRIPT_URL_REGEX_DEFAULT = ".*\\.js.*";
     private static final String CSS_AND_FONTS_URL_REGEX_DEFAULT = ".*\\.(?:css|woff|woff2|ttf).*";
     private static final String MULTIMIDIA_URL_REGEX_DEFAULT =
-            ".*\\.(?:png|gif|jpg|jpeg|svg|mp4|mp3|webm|ico).*";
+            ".*\\.(?:png|gif|jpg|jpeg|svg|mp4|mp3|webm|webp|ico).*";
 
     /** Default is {@code false}. */
     private boolean confirmDropMessage;
