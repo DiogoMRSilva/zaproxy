@@ -151,7 +151,7 @@ public class BreakpointsOptionsPanel extends AbstractParamPanel {
             checkBoxShowIgnoreFilesButtons =
                     new JCheckBox(
                             Constant.messages.getString(
-                                    "brk.optionspanel.option.ShowIgnoreFilesButtons.label"));
+                                    "brk.optionspanel.option.ShowBreakFilteringButtons.label"));
         }
         return checkBoxShowIgnoreFilesButtons;
     }

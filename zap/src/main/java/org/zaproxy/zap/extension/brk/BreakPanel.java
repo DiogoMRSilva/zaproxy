@@ -65,9 +65,6 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
     private final JToggleButton toolBarReqButton;
     private final JToggleButton toolBarResButton;
     private final JToggleButton toolBarAllButton;
-    private final JToggleButton toolBarBrkOnJavascriptButton;
-    private final JToggleButton toolBarBrkOnCSSAndFontsButton;
-    private final JToggleButton toolBarBrkOnMultimediaButton;
     private final JButton toolBarBtnStep;
     private final JButton toolBarBtnContinue;
     private final JButton toolBarBtnDrop;
@@ -154,15 +151,6 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
         toolBarBtnBreakPoint = breakToolbarFactory.getBtnBreakPoint();
         View.getSingleton().addMainToolbarButton(toolBarBtnBreakPoint);
 
-        toolBarBrkOnJavascriptButton = breakToolbarFactory.getBtnBreakOnJavaScript();
-        View.getSingleton().addMainToolbarButton(toolBarBrkOnJavascriptButton);
-
-        toolBarBrkOnCSSAndFontsButton = breakToolbarFactory.getBtnBreakOnCSSAndFonts();
-        View.getSingleton().addMainToolbarButton(toolBarBrkOnCSSAndFontsButton);
-
-        toolBarBrkOnMultimediaButton = breakToolbarFactory.getBtnBreakOnMultimedia();
-        View.getSingleton().addMainToolbarButton(toolBarBrkOnMultimediaButton);
-
         mainBreakButtons = new BreakButtonsUI("mainBreakButtons", breakToolbarFactory);
         this.add(mainBreakButtons.getComponent(), BorderLayout.NORTH);
 
@@ -237,21 +225,6 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
     @Override
     public boolean isBreakAll() {
         return breakToolbarFactory.isBreakAll();
-    }
-
-    @Override
-    public boolean isBreakOnJavaScript() {
-        return breakToolbarFactory.isBreakOnJavaScript();
-    }
-
-    @Override
-    public boolean isBreakOnCSSAndFonts() {
-        return breakToolbarFactory.isBreakOnCSSAndFonts();
-    }
-
-    @Override
-    public boolean isBreakOnMultimedia() {
-        return breakToolbarFactory.isBreakOnMultimedia();
     }
 
     @Override
@@ -544,10 +517,6 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
 
         this.breakToolbarFactory.setShowIgnoreFilesButtons(showButtons);
 
-        toolBarBrkOnJavascriptButton.setVisible(showButtons);
-        toolBarBrkOnCSSAndFontsButton.setVisible(showButtons);
-        toolBarBrkOnMultimediaButton.setVisible(showButtons);
-
         mainBreakButtons.setShowIgnoreFilesButtons(showButtons);
         requestBreakButtons.setShowIgnoreFilesButtons(showButtons);
         responseBreakButtons.setShowIgnoreFilesButtons(showButtons);
@@ -576,6 +545,7 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
         private final JToggleButton brkOnJsButton;
         private final JToggleButton brkOnCSSAndFontsButton;
         private final JToggleButton brkOnMultimediaButton;
+        private final JToggleButton brkOnlyOnScopeButton;
 
         public BreakButtonsUI(String name, BreakPanelToolbarFactory breakToolbarFactory) {
             requestButton = breakToolbarFactory.getBtnBreakRequest();
@@ -584,6 +554,7 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
             brkOnJsButton = breakToolbarFactory.getBtnBreakOnJavaScript();
             brkOnCSSAndFontsButton = breakToolbarFactory.getBtnBreakOnCSSAndFonts();
             brkOnMultimediaButton = breakToolbarFactory.getBtnBreakOnMultimedia();
+            brkOnlyOnScopeButton = breakToolbarFactory.getBtnOnlyBreakOnScope();
 
             toolBar = new JToolBar();
             toolBar.setFloatable(false);
@@ -602,6 +573,7 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
             toolBar.add(brkOnJsButton);
             toolBar.add(brkOnCSSAndFontsButton);
             toolBar.add(brkOnMultimediaButton);
+            toolBar.add(brkOnlyOnScopeButton);
         }
 
         /**
@@ -632,6 +604,7 @@ public class BreakPanel extends AbstractPanel implements Tab, BreakpointManageme
             brkOnJsButton.setVisible(showButtons);
             brkOnCSSAndFontsButton.setVisible(showButtons);
             brkOnMultimediaButton.setVisible(showButtons);
+            brkOnlyOnScopeButton.setVisible(showButtons);
         }
 
         /**

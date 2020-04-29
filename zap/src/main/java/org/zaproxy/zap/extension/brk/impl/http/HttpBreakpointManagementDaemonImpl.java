@@ -54,21 +54,6 @@ public class HttpBreakpointManagementDaemonImpl implements BreakpointManagementI
     }
 
     @Override
-    public boolean isBreakOnJavaScript() {
-        return breakOnJavaScript;
-    }
-
-    @Override
-    public boolean isBreakOnCSSAndFonts() {
-        return breakOnCSSAndFonts;
-    }
-
-    @Override
-    public boolean isBreakOnMultimedia() {
-        return breakOnMultimedia;
-    }
-
-    @Override
     public void breakpointHit() {
         // Ignore
     }

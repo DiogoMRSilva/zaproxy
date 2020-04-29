@@ -32,9 +32,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import org.parosproxy.paros.Constant;
 import org.parosproxy.paros.control.Control;
+import org.parosproxy.paros.model.Model;
+import org.parosproxy.paros.network.HttpMessage;
 import org.parosproxy.paros.view.TabbedPanel;
 import org.parosproxy.paros.view.View;
 import org.zaproxy.zap.extension.brk.impl.http.HttpBreakpointMessage;
+import org.zaproxy.zap.extension.httppanel.Message;
 import org.zaproxy.zap.view.TabbedPanel2;
 import org.zaproxy.zap.view.ZapToggleButton;
 
@@ -62,6 +65,7 @@ public class BreakPanelToolbarFactory {
     private SetBreakOnJavaScriptAction setBreakOnJavaScriptAction;
     private SetBreakOnCSSAndFontsAction setBreakOnCSSAndFontsAction;
     private SetBreakOnMultimediaAction setBreakOnMultimediaAction;
+    private SetBreakOnlyOnScopeAction setOnlyBreakOnScopeAction;
 
     private boolean cont = false;
     private boolean step = false;
@@ -73,6 +77,7 @@ public class BreakPanelToolbarFactory {
     private boolean isBreakOnJavaScript = true;
     private boolean isBreakOnCSSAndFonts = true;
     private boolean isBreakOnMultimedia = true;
+    private boolean isOnlyBreakOnScope = false;
 
     private BreakPanel breakPanel = null;
 
@@ -84,6 +89,7 @@ public class BreakPanelToolbarFactory {
     HttpBreakpointMessage ignoreJavascriptBreakpointMessage;
     HttpBreakpointMessage ignoreCSSAndFontsBreakpointMessage;
     HttpBreakpointMessage ignoreMultimediaBreakpointMessage;
+    HttpBreakpointOutOfScope ignoreMessageNotInScope;
 
     /**
      * A counter to keep track of how many messages are currently caught, to disable the break
@@ -114,6 +120,7 @@ public class BreakPanelToolbarFactory {
         setBreakOnJavaScriptAction = new SetBreakOnJavaScriptAction();
         setBreakOnCSSAndFontsAction = new SetBreakOnCSSAndFontsAction();
         setBreakOnMultimediaAction = new SetBreakOnMultimediaAction();
+        setOnlyBreakOnScopeAction = new SetBreakOnlyOnScopeAction();
 
         this.breakpointsParams = breakpointsParams;
         this.breakPanel = breakPanel;
@@ -146,6 +153,9 @@ public class BreakPanelToolbarFactory {
                         false,
                         true);
         ignoreRulesEnable.add(ignoreMultimediaBreakpointMessage);
+
+        ignoreMessageNotInScope = new HttpBreakpointOutOfScope();
+        ignoreRulesEnable.add(ignoreMessageNotInScope);
     }
 
     public List<BreakpointMessageInterface> getIgnoreRulesEnableList() {
@@ -214,6 +224,10 @@ public class BreakPanelToolbarFactory {
 
     public boolean isBreakOnMultimedia() {
         return isBreakOnMultimedia;
+    }
+
+    public boolean isOnlyBreakOnScope() {
+        return isOnlyBreakOnScope;
     }
 
     public JButton getBtnStep() {
@@ -339,6 +353,20 @@ public class BreakPanelToolbarFactory {
         return btnBreakOnMultimedia;
     }
 
+    public JToggleButton getBtnOnlyBreakOnScope() {
+        ZapToggleButton btnOnlyBreakOnScope;
+
+        btnOnlyBreakOnScope = new ZapToggleButton(setOnlyBreakOnScopeAction);
+        btnOnlyBreakOnScope.setSelectedIcon(
+                new ImageIcon(
+                        BreakPanelToolbarFactory.class.getResource(
+                                "/resource/icon/fugue/target.png")));
+        btnOnlyBreakOnScope.setSelectedToolTipText(
+                Constant.messages.getString("brk.toolbar.button.brkOnlyOnScope.unset"));
+
+        return btnOnlyBreakOnScope;
+    }
+
     public JButton getBtnBreakPoint() {
         return new JButton(addBreakpointButtonAction);
     }
@@ -404,6 +432,12 @@ public class BreakPanelToolbarFactory {
         ignoreMultimediaBreakpointMessage.setEnabled(!isBreakOnMultimedia);
     }
 
+    public void setOnlyBreakOnScope(boolean brk) {
+        isOnlyBreakOnScope = brk;
+        setOnlyBreakOnScopeAction.setSelected(isOnlyBreakOnScope);
+        ignoreMessageNotInScope.setEnabled(isOnlyBreakOnScope);
+    }
+
     private void toggleBreakRequest() {
         setBreakRequest(!isBreakRequest);
     }
@@ -426,6 +460,10 @@ public class BreakPanelToolbarFactory {
 
     private void toggleBreakOnMultimedia() {
         setBreakOnMultimedia(!isBreakOnMultimedia);
+    }
+
+    private void toggleBreakOnScopeOnly() {
+        setOnlyBreakOnScope(!isOnlyBreakOnScope);
     }
 
     public boolean isHoldMessage() {
@@ -527,6 +565,7 @@ public class BreakPanelToolbarFactory {
         isBreakOnJavaScript = true;
         isBreakOnCSSAndFonts = true;
         isBreakOnMultimedia = true;
+        isOnlyBreakOnScope = false;
         countCaughtMessages = 0;
     }
 
@@ -548,6 +587,8 @@ public class BreakPanelToolbarFactory {
         setBreakOnCSSAndFonts(isBreakOnCSSAndFonts);
 
         setBreakOnMultimedia(isBreakOnMultimedia);
+
+        setOnlyBreakOnScope(isOnlyBreakOnScope);
 
         setContinue(true);
     }
@@ -599,6 +640,7 @@ public class BreakPanelToolbarFactory {
             setBreakOnJavaScript(true);
             setBreakOnCSSAndFonts(true);
             setBreakOnMultimedia(true);
+            setOnlyBreakOnScope(false);
         }
     }
 
@@ -635,6 +677,7 @@ public class BreakPanelToolbarFactory {
             setBreakOnJavaScript(isBreakOnJavaScript);
             setBreakOnCSSAndFonts(isBreakOnCSSAndFonts);
             setBreakOnMultimedia(isBreakOnMultimedia);
+            setOnlyBreakOnScope(isOnlyBreakOnScope);
         }
     }
 
@@ -838,6 +881,27 @@ public class BreakPanelToolbarFactory {
         }
     }
 
+    private class SetBreakOnlyOnScopeAction extends SelectableAbstractAction {
+
+        private static final long serialVersionUID = 1L;
+
+        public SetBreakOnlyOnScopeAction() {
+            super(
+                    null,
+                    new ImageIcon(
+                            BreakPanelToolbarFactory.class.getResource(
+                                    "/resource/icon/fugue/target-grey.png")));
+            putValue(
+                    Action.SHORT_DESCRIPTION,
+                    Constant.messages.getString("brk.toolbar.button.brkOnlyOnScope.set"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            toggleBreakOnScopeOnly();
+        }
+    }
+
     /**
      * An {@code AbstractAction} which allows to be selected.
      *
@@ -866,6 +930,33 @@ public class BreakPanelToolbarFactory {
          */
         public void setSelected(boolean selected) {
             putValue(Action.SELECTED_KEY, selected);
+        }
+    }
+
+    private class HttpBreakpointOutOfScope extends AbstractBreakPointMessage {
+
+        private static final String TYPE = "HTTP";
+
+        @Override
+        public String getType() {
+            return TYPE;
+        }
+
+        @Override
+        public boolean match(Message aMessage, boolean isRequest, boolean onlyIfInScope) {
+            if (aMessage instanceof HttpMessage) {
+                HttpMessage message = (HttpMessage) aMessage;
+                String uri = message.getRequestHeader().getURI().toString();
+                if (!Model.getSingleton().getSession().isInScope(uri)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public String getDisplayMessage() {
+            return Constant.messages.getString("brk.brkpoint.onscope");
         }
     }
 }
