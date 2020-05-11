@@ -846,10 +846,10 @@ public class WorkbenchPanel extends JPanel {
         validateNotNull(panels, "panels");
         validateNotNull(panelType, "panelType");
 
-        //TODO HACK change all the WORK to STATUS
-        if (panelType == PanelType.WORK){//TODO HACK remove
-            panelType = PanelType.STATUS;//TODO HACK remove
-        }//TODO HACK remove
+        // TODO HACK change all the WORK to STATUS
+        if (panelType == PanelType.WORK) { // TODO HACK remove
+            panelType = PanelType.STATUS; // TODO HACK remove
+        } // TODO HACK remove
         boolean fullLayout = layout == Layout.FULL;
 
         addPanels(getTabbedFull(), panels, fullLayout);
