@@ -39,17 +39,11 @@
 // ZAP: 2019/06/05 Normalise format/style.
 package org.parosproxy.paros.view;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.BorderFactory;
@@ -832,6 +826,35 @@ public class WorkbenchPanel extends JPanel {
         return new TabbedPanel2();
     }
 
+    public final static Set<String> REQUESTS_AND_SITES_NEEDED = Collections.unmodifiableSet(
+            new HashSet<String>(Arrays.asList(
+                    "History",
+                    "Alerts"
+            )));
+
+    public final static Set<String> REQUESTS_NEEDED = Collections.unmodifiableSet(
+            new HashSet<String>(Arrays.asList(
+                    "Search",
+                    "Active Scan",
+                    "Spider",
+                    "Forced Browse",
+                    "Zest Results",
+                    "Server-Sent",
+                    "Requester",
+                    "AJAX Spider",
+                    "Access Control",
+                    "Callbacks",
+                    "Fuzzer"
+            )));
+
+    public final static Set<String> SITES_NEEDED = Collections.unmodifiableSet(
+            new HashSet<String>(Arrays.asList(
+                    "History",
+                    "Alerts",
+                    "Technology",
+                    "HTTPS Info"
+            )));
+
     /**
      * Adds the given panels to the workbench, hinting with the given panel type.
      *
@@ -847,12 +870,110 @@ public class WorkbenchPanel extends JPanel {
         validateNotNull(panelType, "panelType");
 
         // TODO HACK change all the WORK to STATUS
-        if (panelType == PanelType.WORK) { // TODO HACK remove
-            panelType = PanelType.STATUS; // TODO HACK remove
-        } // TODO HACK remove
+        // if (panelType == PanelType.WORK) { // TODO HACK remove
+        //     panelType = PanelType.STATUS; // TODO HACK remove
+        // } // TODO HACK remove
         boolean fullLayout = layout == Layout.FULL;
 
-        addPanels(getTabbedFull(), panels, fullLayout);
+
+        if (panels.size() > 0) {
+            AbstractPanel panel = panels.get(0);
+            AbstractPanel panelToAdd = panel;
+            String name = panel.getName();
+            if ( REQUESTS_AND_SITES_NEEDED.contains(name)) {
+                JSplitPane splitVert = new JSplitPane();
+
+                splitVert.setDividerLocation(restoreDividerLocation(DIVIDER_VERTICAL, 300));
+                splitVert.addPropertyChangeListener(
+                       JSplitPane.DIVIDER_LOCATION_PROPERTY, new DividerResizedListener(DIVIDER_VERTICAL));
+                splitVert.setDividerSize(3);
+                splitVert.setOrientation(JSplitPane.VERTICAL_SPLIT);
+                splitVert.setResizeWeight(0.5D);
+                splitVert.setTopComponent(panel);
+                splitVert.setContinuousLayout(false);
+                splitVert.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+                if (splitRequestAndResponse == null) {
+                    splitRequestAndResponse = createSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+                    splitRequestAndResponse.setLeftComponent(requestPanel);
+                    splitRequestAndResponse.setRightComponent(responsePanel);
+                }
+                splitVert.setBottomComponent(splitRequestAndResponse);
+
+
+                JSplitPane splitHoriz = new JSplitPane();
+
+                splitHoriz.setLeftComponent(View.getSingleton().getSiteTreePanel());
+                splitHoriz.setRightComponent(splitVert);
+                splitHoriz.setDividerLocation(restoreDividerLocation(DIVIDER_HORIZONTAL, 300));
+                splitHoriz.addPropertyChangeListener(
+                        JSplitPane.DIVIDER_LOCATION_PROPERTY,
+                        new DividerResizedListener(DIVIDER_HORIZONTAL));
+                splitHoriz.setDividerSize(3);
+                splitHoriz.setResizeWeight(0.3D);
+                splitHoriz.setContinuousLayout(false);
+                splitHoriz.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+
+                panelToAdd = new AbstractPanel();
+                panelToAdd.setLayout(new GridLayout(1, 1));
+                panelToAdd.setName(name);
+                panelToAdd.setIcon(panel.getIcon());
+                panelToAdd.add(splitHoriz);
+
+            } else if ( REQUESTS_NEEDED.contains(name)) {
+                JSplitPane splitVert = new JSplitPane();
+
+                // splitVert.setDividerLocation(restoreDividerLocation(DIVIDER_VERTICAL, 300));
+                splitVert.setDividerLocation(300);
+                splitVert.addPropertyChangeListener(
+                        JSplitPane.DIVIDER_LOCATION_PROPERTY, new DividerResizedListener(DIVIDER_VERTICAL));
+                splitVert.setDividerSize(3);
+                splitVert.setOrientation(JSplitPane.VERTICAL_SPLIT);
+                splitVert.setResizeWeight(0.5D);
+                splitVert.setTopComponent(panel);
+                splitVert.setContinuousLayout(false);
+                splitVert.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+                if (splitRequestAndResponse == null) {
+                    splitRequestAndResponse = createSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+                    splitRequestAndResponse.setLeftComponent(requestPanel);
+                    splitRequestAndResponse.setRightComponent(responsePanel);
+                }
+                splitVert.setBottomComponent(splitRequestAndResponse);
+
+
+                panelToAdd = new AbstractPanel();
+                panelToAdd.setLayout(new GridLayout(1, 1));
+                panelToAdd.setName(name);
+                panelToAdd.setIcon(panel.getIcon());
+                panelToAdd.add(splitVert);
+
+            } else if ( SITES_NEEDED.contains(name)) {
+                JSplitPane splitHoriz = new JSplitPane();
+
+                splitHoriz.setLeftComponent(View.getSingleton().getSiteTreePanel());
+                splitHoriz.setRightComponent(panel);
+                // splitHoriz.setDividerLocation(restoreDividerLocation(DIVIDER_HORIZONTAL, 300));
+                splitHoriz.setDividerLocation(300);
+                splitHoriz.addPropertyChangeListener(
+                        JSplitPane.DIVIDER_LOCATION_PROPERTY,
+                        new DividerResizedListener(DIVIDER_HORIZONTAL));
+                splitHoriz.setDividerSize(3);
+                splitHoriz.setResizeWeight(0.3D);
+                splitHoriz.setContinuousLayout(false);
+                splitHoriz.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+
+                panelToAdd = new AbstractPanel();
+                panelToAdd.setLayout(new GridLayout(1, 1));
+                panelToAdd.setName(name);
+                panelToAdd.setIcon(panel.getIcon());
+                panelToAdd.add(splitHoriz);
+            }
+
+
+            addPanel(getTabbedFull(), panelToAdd, fullLayout);
+        }
+
 
         switch (panelType) {
             case SELECT:
