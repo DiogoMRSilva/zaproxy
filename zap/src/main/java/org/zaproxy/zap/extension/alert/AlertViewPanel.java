@@ -502,7 +502,8 @@ public class AlertViewPanel extends AbstractPanel {
     }
 
     private String getInjectionLocationText(Alert alert) {
-        return alert.getInjectionLocation();
+        return Constant.messages.getString(
+                "variant.alert.location." + alert.getInjectionLocation());
     }
 
     public void clearAlert() {
