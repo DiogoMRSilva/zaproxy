@@ -501,7 +501,15 @@ public class AlertViewPanel extends AbstractPanel {
         return strBuilder.toString();
     }
 
+    /**
+     * @param alert
+     * @return a pretty string representing injection location or empty string if alert is injection
+     *     location is null/empty
+     */
     private String getInjectionLocationText(Alert alert) {
+        if (alert.getInjectionLocation() == null || alert.getInjectionLocation().length() == 0) {
+            return "";
+        }
         return Constant.messages.getString(
                 "variant.alert.location." + alert.getInjectionLocation());
     }
